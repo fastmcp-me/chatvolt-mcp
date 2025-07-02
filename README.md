@@ -1,29 +1,23 @@
-# chatvolt-mcp MCP Server
+# Chatvolt Get Agent MCP Server
 
-A Model Context Protocol server
+A Model Context Protocol server that wraps the Chatvolt "Get Agent" API.
 
-This is a TypeScript-based MCP server that implements a simple notes system. It demonstrates core MCP concepts by providing:
-
-- Resources representing text notes with URIs and metadata
-- Tools for creating new notes
-- Prompts for generating summaries of notes
+This is a TypeScript-based MCP server that provides a tool to retrieve information about a Chatvolt agent.
 
 ## Features
 
-### Resources
-- List and access notes via `note://` URIs
-- Each note has a title, content and metadata
-- Plain text mime type for simple content access
-
 ### Tools
-- `create_note` - Create new text notes
-  - Takes title and content as required parameters
-  - Stores note in server state
+- `get_agent` - Retrieves a Chatvolt agent by its ID or handle.
+  - Takes an `id` as a required parameter.
+  - The `id` can be the agent's ID or its handle (e.g., `@my-agent`).
 
-### Prompts
-- `summarize_notes` - Generate a summary of all stored notes
-  - Includes all note contents as embedded resources
-  - Returns structured prompt for LLM summarization
+## Configuration
+
+This server requires a Chatvolt API key to be set as an environment variable.
+
+```bash
+export CHATVOLT_API_KEY="your_api_key_here"
+```
 
 ## Development
 
