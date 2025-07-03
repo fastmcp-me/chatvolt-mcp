@@ -14,13 +14,17 @@
     "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
     "prepare": "npm run build",
     "watch": "tsc --watch",
-    "inspector": "npx @modelcontextprotocol/inspector build/index.js"
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "0.6.0"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.11.24",
+    "jest": "^30.0.3",
+    "ts-jest": "^29.4.0",
     "typescript": "^5.3.3"
   }
 }

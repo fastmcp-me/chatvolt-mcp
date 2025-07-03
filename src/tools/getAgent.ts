@@ -22,12 +22,13 @@ export async function handleGetAgent(request: CallToolRequest) {
     throw new Error("Unknown tool");
   }
 
-  const id = String(request.params.arguments?.id);
+  const id = request.params.arguments?.id;
+
   if (!id) {
-    throw new Error("Agent ID is required");
+    throw new Error("'id' is a required argument.");
   }
 
-  const data = await getAgentById(id);
+  const data = await getAgentById(String(id));
 
   return {
     content: [

@@ -1,49 +1,150 @@
-# Software Architecture Improvement Plan
+# Technical Specification: `createAgent` Tool
 
-This document outlines the plan to refactor the project's architecture from a single-file structure to a more modular and scalable design.
+## 1. Overview
 
-### 1. Separate Concerns
+This document outlines the technical specification for a new tool named `createAgent`. This tool will allow users to create a new agent in Chatvolt by interacting with the `POST /agents` API endpoint. It will be integrated into the existing tool framework, following the established patterns for tool definition, handling, and service interaction.
 
-The application will be broken down into distinct modules for the server, tools, and services. This will improve code organization and make it easier to add new features in the future.
+## 2. Tool Definition (`src/tools/createAgent.ts`)
 
-### 2. Introduce a Service Layer
+The `createAgent` tool will be defined in a new file, [`src/tools/createAgent.ts`](src/tools/createAgent.ts).
 
-A dedicated service layer will encapsulate all interactions with the Chatvolt API. This will centralize API logic, making it reusable and easier to maintain.
+### 2.1. Tool Object (`createAgentTool`)
 
-### 3. Implement a Tools Directory
+The tool will be exposed through a `Tool` object with the following structure:
 
-Each tool will have its own file within a `src/tools` directory. An `index.ts` file in this directory will be responsible for registering all available tools. This promotes a clean and scalable structure for adding new tools.
+```typescript
+import { Tool } from "@modelcontextprotocol/sdk/types.js";
 
-### 4. Add Unit Testing
+export const createAgentTool: Tool = {
+  name: "create_agent",
+  description: "Create a new Chatvolt agent",
+  inputSchema: {
+    type: "object",
+    properties: {
+      name: {
+        type: "string",
+        description: "The name of the agent.",
+      },
+      description: {
+        type: "string",
+        description: "A description for the agent.",
+      },
+      modelName: {
+        type: "string",
+        description: "The model name for the agent (e.g., 'gpt-4').",
+      },
+      systemPrompt: {
+        type: "string",
+        description: "The system message for the agent.",
+      },
+    },
+    required: ["name", "modelName"],
+  },
+};
+```
 
-A testing framework will be set up to ensure the reliability and correctness of the tools and services. This will involve creating test files for each tool and service.
+### 2.2. Tool Handler (`handleCreateAgent`)
 
-### 5. Centralized Configuration
+A handler function will process requests for this tool. It will validate the input, call the Chatvolt service, and format the response.
 
-Environment variables and other configurations will be managed in a more structured way to improve security and maintainability.
+```typescript
+import { CallToolRequest } from "@modelcontextprotocol/sdk/types.js";
+import { createAgent } from "../services/chatvolt.js";
 
-### Proposed Architecture Diagram
+export async function handleCreateAgent(request: CallToolRequest) {
+  if (request.params.name !== "create_agent") {
+    throw new Error("Unknown tool");
+  }
 
-```mermaid
-graph TD
-    subgraph "Entry Point"
-        A["src/index.ts (Initializes server)"]
-    end
+  const { name, description, modelName, systemPrompt } = request.params.arguments || {};
 
-    subgraph "Server Logic"
-        B["src/server.ts (Configures and starts MCP server)"]
-    end
+  if (!name || !modelName) {
+    throw new Error("'name' and 'modelName' are required arguments.");
+  }
 
-    subgraph "Tool Definitions"
-        C["src/tools/index.ts (Registers all tools)"]
-        D["src/tools/getAgent.ts (Implements 'get_agent' tool)"]
-    end
+  const agentData = {
+    name: String(name),
+    description: description ? String(description) : undefined,
+    modelName: String(modelName),
+    systemPrompt: systemPrompt ? String(systemPrompt) : undefined,
+  };
 
-    subgraph "External Services"
-        E["src/services/chatvolt.ts (Handles Chatvolt API communication)"]
-    end
+  const data = await createAgent(agentData);
 
-    A --> B;
-    B --> C;
-    C --> D;
-    D --> E;
+  return {
+    content: [
+      {
+        type: "text",
+        text: JSON.stringify(data, null, 2),
+      },
+    ],
+  };
+}
+```
+
+## 3. Service Layer (`src/services/chatvolt.ts`)
+
+A new function, `createAgent`, will be added to [`src/services/chatvolt.ts`](src/services/chatvolt.ts) to handle the API interaction.
+
+### 3.1. `createAgent` Function
+
+This function will send a `POST` request to the `/agents` endpoint.
+
+```typescript
+// Existing content in src/services/chatvolt.ts...
+
+/**
+ * Creates a new agent in Chatvolt.
+ * @param agentData - The data for the new agent.
+ * @returns The created agent data.
+ * @throws An error if the API key is not set or if the request fails.
+ */
+export async function createAgent(agentData: {
+  name: string;
+  description?: string;
+  modelName: string;
+  systemPrompt?: string;
+}) {
+  const apiKey = process.env.CHATVOLT_API_KEY;
+  if (!apiKey) {
+    throw new Error("CHATVOLT_API_KEY environment variable not set");
+  }
+
+  const response = await fetch(`https://api.chatvolt.ai/agents`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(agentData),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+  }
+
+  return response.json();
+}
+```
+
+## 4. Tool Integration (`src/tools/index.ts`)
+
+The new `createAgent` tool will be registered in [`src/tools/index.ts`](src/tools/index.ts).
+
+### 4.1. Modifications to `src/tools/index.ts`
+
+The file will be updated to import and export the new tool and its handler.
+
+```typescript
+import { getAgentTool, handleGetAgent } from "./getAgent.js";
+import { createAgentTool, handleCreateAgent } from "./createAgent.js";
+
+export const tools = [getAgentTool, createAgentTool];
+export const toolHandlers = {
+  [getAgentTool.name]: handleGetAgent,
+  [createAgentTool.name]: handleCreateAgent,
+};
+```
+
+This completes the technical specification for the `createAgent` tool.
