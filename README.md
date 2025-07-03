@@ -1,15 +1,24 @@
-# Chatvolt Get Agent MCP Server
+# Chatvolt MCP Server
 
-A Model Context Protocol server that wraps the Chatvolt "Get Agent" API.
+A Model Context Protocol server that wraps the Chatvolt API, providing tools to manage agents and CRM workflows.
 
-This is a TypeScript-based MCP server that provides a tool to retrieve information about a Chatvolt agent.
+This is a TypeScript-based MCP server that provides tools to interact with Chatvolt agents and CRM scenarios.
 
 ## Features
 
-### Tools
-- `get_agent` - Retrieves a Chatvolt agent by its ID or handle.
-  - Takes an `id` as a required parameter.
-  - The `id` can be the agent's ID or its handle (e.g., `@my-agent`).
+### Agent Tools
+- `get_agent`: Retrieves a Chatvolt agent by its ID or handle.
+- `create_agent`: Creates a new Chatvolt agent.
+
+### CRM Tools
+- `list_crm_scenarios`: Lists all CRM scenarios.
+- `create_crm_scenario`: Creates a new CRM scenario.
+- `update_crm_scenario`: Updates an existing CRM scenario.
+- `delete_crm_scenario`: Deletes a CRM scenario.
+- `list_crm_steps`: Lists all steps for a given CRM scenario.
+- `create_crm_step`: Creates a new step for a CRM scenario.
+- `update_crm_step`: Updates an existing CRM step.
+- `delete_crm_step`: Deletes a CRM step.
 
 ## Configuration
 
