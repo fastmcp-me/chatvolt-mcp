@@ -39,6 +39,8 @@ export async function createAgent(agentData: {
   description?: string;
   modelName: string;
   systemPrompt?: string;
+  temperature?: number;
+  tools?: any[];
 }) {
   const apiKey = process.env.CHATVOLT_API_KEY;
   if (!apiKey) {

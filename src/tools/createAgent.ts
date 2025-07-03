@@ -23,6 +23,18 @@ export const createAgentTool: Tool = {
         type: "string",
         description: "The system prompt for the agent.",
       },
+      temperature: {
+        type: "number",
+        description:
+          "Model temperature (min 0.0, max 1.0). Controls randomness. Model default if not specified.",
+      },
+      tools: {
+        type: "array",
+        items: {
+          type: "object",
+        },
+        description: "Lista de ferramentas a serem associadas ao agente.",
+      },
     },
     required: ["name", "modelName", "description", "systemPrompt"],
   },
@@ -33,7 +45,7 @@ export async function handleCreateAgent(request: CallToolRequest) {
     throw new Error("Unknown tool");
   }
 
-  const { name, description, modelName, systemPrompt } =
+  const { name, description, modelName, systemPrompt, temperature, tools } =
     request.params.arguments || {};
 
   if (!name || !modelName) {
@@ -45,6 +57,8 @@ export async function handleCreateAgent(request: CallToolRequest) {
     description: description ? String(description) : undefined,
     modelName: String(modelName),
     systemPrompt: systemPrompt ? String(systemPrompt) : undefined,
+    temperature: temperature ? Number(temperature) : undefined,
+    tools: tools as any[] | undefined,
   };
 
   const data = await createAgent(agentData);
