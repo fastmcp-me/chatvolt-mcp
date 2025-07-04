@@ -56,7 +56,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 {
   "mcpServers": {
     "chatvolt-mcp": {
-      "command": "/path/to/chatvolt-mcp/build/index.js"
+      "command": "node /path/to/chatvolt-mcp/build/index.js"
     }
   }
 }
