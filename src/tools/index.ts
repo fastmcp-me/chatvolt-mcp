@@ -42,6 +42,8 @@ import {
   handleUpdateAgent,
 } from "./updateAgent.js";
 import { deleteAgentTool, handleDeleteAgent } from "./deleteAgent.js";
+import { agentQueryTool, handleAgentQuery } from "./queryAgent.js";
+import { listDatastoresTool, handleListDatastores } from "./listDatastores.js";
 
 export const tools = [
   getAgentTool,
@@ -58,6 +60,8 @@ export const tools = [
   enableDisableAgentIntegrationTool,
   updateAgentTool,
   deleteAgentTool,
+  agentQueryTool,
+  listDatastoresTool,
 ];
 export const toolHandlers = {
   [getAgentTool.name]: handleGetAgent,
@@ -74,4 +78,6 @@ export const toolHandlers = {
   [enableDisableAgentIntegrationTool.name]: handleEnableDisableAgentIntegration,
   [updateAgentTool.name]: handleUpdateAgent,
   [deleteAgentTool.name]: handleDeleteAgent,
+  [agentQueryTool.name]: handleAgentQuery,
+  [listDatastoresTool.name]: handleListDatastores,
 };

@@ -8,9 +8,10 @@ jest.unstable_mockModule("./services/chatvolt.js", () => ({
   getAgentById: jest.fn(),
   createAgent: jest.fn(),
   deleteAgent: jest.fn(),
+  agentQuery: jest.fn(),
 }));
 
-const { getAgentById, createAgent, deleteAgent } = (await import(
+const { getAgentById, createAgent, deleteAgent, agentQuery } = (await import(
   "./services/chatvolt.js"
 )) as typeof ChatvoltService;
 
@@ -23,6 +24,9 @@ const { handleCreateAgent: handleCreateAgentFn } = await import(
 const { handleDeleteAgent: handleDeleteAgentFn } = await import(
   "./tools/deleteAgent.js"
 );
+const { handleAgentQuery: handleAgentQueryFn } = await import(
+  "./tools/queryAgent.js"
+);
 
 const mockedGetAgentById = getAgentById as jest.MockedFunction<
   typeof getAgentById
@@ -33,12 +37,14 @@ const mockedCreateAgent = createAgent as jest.MockedFunction<
 const mockedDeleteAgent = deleteAgent as jest.MockedFunction<
   typeof deleteAgent
 >;
+const mockedAgentQuery = agentQuery as jest.MockedFunction<typeof agentQuery>;
 
 describe("Tool Handlers", () => {
   beforeEach(() => {
     mockedGetAgentById.mockReset();
     mockedCreateAgent.mockReset();
     mockedDeleteAgent.mockReset();
+    mockedAgentQuery.mockReset();
   });
 
   describe("handleGetAgent", () => {
@@ -212,6 +218,41 @@ describe("Tool Handlers", () => {
       };
 
       await expect(handleDeleteAgentFn(request)).rejects.toThrow(
+        "'id' is a required argument."
+      );
+    });
+  });
+
+  describe("handleAgentQuery", () => {
+    it("should call agentQuery with the correct parameters", async () => {
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "agent_query",
+          arguments: { id: "123", query: "Hello" },
+        },
+      };
+      mockedAgentQuery.mockResolvedValue({
+        answer: "Hi there!",
+      });
+
+      await handleAgentQueryFn(request);
+
+      expect(mockedAgentQuery).toHaveBeenCalledWith("123", {
+        query: "Hello",
+      });
+    });
+
+    it("should throw an error if id is missing", async () => {
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "agent_query",
+          arguments: { query: "Hello" },
+        },
+      };
+
+      await expect(handleAgentQueryFn(request)).rejects.toThrow(
         "'id' is a required argument."
       );
     });
