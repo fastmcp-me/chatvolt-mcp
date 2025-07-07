@@ -505,3 +505,32 @@ export async function createDatasource(datasourceData: {
 
   return response.json();
 }
+export async function createDatastore(datastoreData: {
+  name?: string;
+  description?: string;
+  type: "qdrant";
+  isPublic?: boolean;
+  pluginName?: string;
+  pluginDescriptionForHumans?: string;
+}) {
+  const apiKey = process.env.CHATVOLT_API_KEY;
+  if (!apiKey) {
+    throw new Error("CHATVOLT_API_KEY environment variable not set");
+  }
+
+  const response = await fetch(`https://api.chatvolt.ai/datastores`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(datastoreData),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+  }
+
+  return response.json();
+}
