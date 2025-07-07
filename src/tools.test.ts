@@ -9,11 +9,16 @@ jest.unstable_mockModule("./services/chatvolt.js", () => ({
   createAgent: jest.fn(),
   deleteAgent: jest.fn(),
   agentQuery: jest.fn(),
+  createDatasource: jest.fn(),
 }));
 
-const { getAgentById, createAgent, deleteAgent, agentQuery } = (await import(
-  "./services/chatvolt.js"
-)) as typeof ChatvoltService;
+const {
+  getAgentById,
+  createAgent,
+  deleteAgent,
+  agentQuery,
+  createDatasource,
+} = (await import("./services/chatvolt.js")) as typeof ChatvoltService;
 
 const { handleGetAgent: handleGetAgentFn } = await import(
   "./tools/getAgent.js"
@@ -27,6 +32,9 @@ const { handleDeleteAgent: handleDeleteAgentFn } = await import(
 const { handleAgentQuery: handleAgentQueryFn } = await import(
   "./tools/queryAgent.js"
 );
+const { handleCreateDatasource: handleCreateDatasourceFn } = await import(
+  "./tools/createDatasource.js"
+);
 
 const mockedGetAgentById = getAgentById as jest.MockedFunction<
   typeof getAgentById
@@ -38,6 +46,9 @@ const mockedDeleteAgent = deleteAgent as jest.MockedFunction<
   typeof deleteAgent
 >;
 const mockedAgentQuery = agentQuery as jest.MockedFunction<typeof agentQuery>;
+const mockedCreateDatasource = createDatasource as jest.MockedFunction<
+  typeof createDatasource
+>;
 
 describe("Tool Handlers", () => {
   beforeEach(() => {
@@ -45,6 +56,7 @@ describe("Tool Handlers", () => {
     mockedCreateAgent.mockReset();
     mockedDeleteAgent.mockReset();
     mockedAgentQuery.mockReset();
+    mockedCreateDatasource.mockReset();
   });
 
   describe("handleGetAgent", () => {
@@ -254,6 +266,56 @@ describe("Tool Handlers", () => {
 
       await expect(handleAgentQueryFn(request)).rejects.toThrow(
         "'id' is a required argument."
+      );
+    });
+  });
+
+  describe("handleCreateDatasource", () => {
+    it("should create a datasource with all required parameters", async () => {
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "create_datasource",
+          arguments: {
+            datastoreId: "ds-123",
+            name: "Test Datasource",
+            text: "This is a test.",
+          },
+        },
+      };
+      const expectedDatasource = {
+        id: "1",
+        datastoreId: "ds-123",
+        name: "Test Datasource",
+        type: "file",
+      };
+      mockedCreateDatasource.mockResolvedValue(expectedDatasource);
+      const result = await handleCreateDatasourceFn(request);
+      expect(mockedCreateDatasource).toHaveBeenCalledWith({
+        datastoreId: "ds-123",
+        name: "Test Datasource",
+        type: "file",
+        config: {
+          text: "This is a test.",
+        },
+      });
+      expect(result.content[0].text).toEqual(
+        JSON.stringify(expectedDatasource, null, 2)
+      );
+    });
+
+    it("should throw an error if required parameters are missing", async () => {
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "create_datasource",
+          arguments: {
+            name: "Missing Datastore ID",
+          },
+        },
+      };
+      await expect(handleCreateDatasourceFn(request)).rejects.toThrow(
+        "'datastoreId', 'name' and 'text' are required arguments."
       );
     });
   });

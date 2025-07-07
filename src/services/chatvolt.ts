@@ -458,3 +458,50 @@ export async function getDatastoreById(id: string, queryParams?: Record<string, 
 
   return response.json();
 }
+export async function createDatasource(datasourceData: {
+  datastoreId: string;
+  name: string;
+  type: string;
+  config?: object;
+}) {
+  const apiKey = process.env.CHATVOLT_API_KEY;
+  if (!apiKey) {
+    throw new Error("CHATVOLT_API_KEY environment variable not set");
+  }
+
+  let body: any;
+  const headers: any = {
+    Authorization: `Bearer ${apiKey}`,
+  };
+
+  if (datasourceData.type === "file") {
+    const formData = new FormData();
+    formData.append("datastoreId", datasourceData.datastoreId);
+    formData.append("type", datasourceData.type);
+    formData.append("fileName", datasourceData.name);
+    if (datasourceData.config) {
+      const config = datasourceData.config as { text: string };
+      const blob = new Blob([config.text], { type: "text/plain" });
+      formData.append("file", blob, datasourceData.name);
+    }
+    body = formData;
+  } else {
+    body = JSON.stringify(datasourceData);
+    headers["Content-Type"] = "application/json";
+  }
+
+  const response = await fetch(`https://api.chatvolt.ai/datasources`, {
+    method: "POST",
+    headers,
+    body,
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `API request failed with status ${response.status}: ${errorText}`
+    );
+  }
+
+  return response.json();
+}
