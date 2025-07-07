@@ -1,24 +1,65 @@
 # Chatvolt MCP Server
 
-A Model Context Protocol server that wraps the Chatvolt API, providing tools to manage agents and CRM workflows.
+A Model Context Protocol server that wraps the Chatvolt API, providing tools to manage agents, datastores, and CRM workflows.
 
-This is a TypeScript-based MCP server that provides tools to interact with Chatvolt agents and CRM scenarios.
+This is a TypeScript-based MCP server that provides tools to interact with Chatvolt.
+
+## Installation
+
+You can install and run this server using `npx`:
+
+```bash
+npx chatvolt-mcp
+```
+
+To use with Roo, add the following to your `.roo/mcp.json` file:
+
+```json
+{
+  "mcpServers": {
+    "chatvolt-mcp": {
+      "command": "npx",
+      "args": [
+        "chatvolt-mcp"
+      ],
+      "env": {
+        "CHATVOLT_API_KEY": "{YOUR_TOKEN}"
+      },
+      "disabled": false,
+      "alwaysAllow": [
+        "get_agent"
+      ]
+    }
+  }
+}
+```
 
 ## Features
 
 ### Agent Tools
-- `get_agent`: Retrieves a Chatvolt agent by its ID or handle.
 - `create_agent`: Creates a new Chatvolt agent.
+- `delete_agent`: Deletes a Chatvolt agent.
+- `enable_disable_agent_integration`: Enables or disables an agent integration.
+- `get_agent`: Retrieves a Chatvolt agent by its ID or handle.
+- `list_agents`: Lists all Chatvolt agents.
+- `query_agent`: Sends a query to a Chatvolt agent.
+- `update_agent`: Updates an existing Chatvolt agent.
 
 ### CRM Tools
-- `list_crm_scenarios`: Lists all CRM scenarios.
 - `create_crm_scenario`: Creates a new CRM scenario.
-- `update_crm_scenario`: Updates an existing CRM scenario.
-- `delete_crm_scenario`: Deletes a CRM scenario.
-- `list_crm_steps`: Lists all steps for a given CRM scenario.
 - `create_crm_step`: Creates a new step for a CRM scenario.
-- `update_crm_step`: Updates an existing CRM step.
+- `delete_crm_scenario`: Deletes a CRM scenario.
 - `delete_crm_step`: Deletes a CRM step.
+- `list_crm_scenarios`: Lists all CRM scenarios.
+- `list_crm_steps`: Lists all steps for a given CRM scenario.
+- `update_crm_scenario`: Updates an existing CRM scenario.
+- `update_crm_step`: Updates an existing CRM step.
+
+### Datastore Tools
+- `create_datastore`: Creates a new datastore.
+- `create_datasource`: Creates a new datasource.
+- `get_datastore`: Retrieves a datastore.
+- `list_datastores`: Lists all datastores.
 
 ## Configuration
 
@@ -43,23 +84,6 @@ npm run build
 For development with auto-rebuild:
 ```bash
 npm run watch
-```
-
-## Installation
-
-To use with Claude Desktop, add the server config:
-
-On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
-
-```json
-{
-  "mcpServers": {
-    "chatvolt-mcp": {
-      "command": "node /path/to/chatvolt-mcp/build/index.js"
-    }
-  }
-}
 ```
 
 ### Debugging
