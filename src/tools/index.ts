@@ -44,6 +44,7 @@ import {
 import { deleteAgentTool, handleDeleteAgent } from "./deleteAgent.js";
 import { agentQueryTool, handleAgentQuery } from "./queryAgent.js";
 import { listDatastoresTool, handleListDatastores } from "./listDatastores.js";
+import { getDatastoreTool, handleGetDatastore } from "./getDatastore.js";
 
 export const tools = [
   getAgentTool,
@@ -62,6 +63,7 @@ export const tools = [
   deleteAgentTool,
   agentQueryTool,
   listDatastoresTool,
+  getDatastoreTool,
 ];
 export const toolHandlers = {
   [getAgentTool.name]: handleGetAgent,
@@ -80,4 +82,5 @@ export const toolHandlers = {
   [deleteAgentTool.name]: handleDeleteAgent,
   [agentQueryTool.name]: handleAgentQuery,
   [listDatastoresTool.name]: handleListDatastores,
+  [getDatastoreTool.name]: handleGetDatastore,
 };
