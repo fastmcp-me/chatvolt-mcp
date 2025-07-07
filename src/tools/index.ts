@@ -32,6 +32,10 @@ import {
   deleteCrmStepTool,
   handleDeleteCrmStep,
 } from "./deleteCrmStep.js";
+import {
+  enableDisableAgentIntegrationTool,
+  handleEnableDisableAgentIntegration,
+} from "./enableDisableAgentIntegration.js";
 
 export const tools = [
   getAgentTool,
@@ -44,6 +48,7 @@ export const tools = [
   createCrmStepTool,
   updateCrmStepTool,
   deleteCrmStepTool,
+  enableDisableAgentIntegrationTool,
 ];
 export const toolHandlers = {
   [getAgentTool.name]: handleGetAgent,
@@ -56,4 +61,5 @@ export const toolHandlers = {
   [createCrmStepTool.name]: handleCreateCrmStep,
   [updateCrmStepTool.name]: handleUpdateCrmStep,
   [deleteCrmStepTool.name]: handleDeleteCrmStep,
+  [enableDisableAgentIntegrationTool.name]: handleEnableDisableAgentIntegration,
 };

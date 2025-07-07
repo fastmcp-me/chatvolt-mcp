@@ -283,3 +283,32 @@ export async function deleteCrmStep(id: string) {
 
   return response.json();
 }
+export async function enableDisableAgentIntegration(
+  id: string,
+  type: string,
+  enabled: boolean
+) {
+  const apiKey = process.env.CHATVOLT_API_KEY;
+  if (!apiKey) {
+    throw new Error("CHATVOLT_API_KEY environment variable not set");
+  }
+
+  const url = new URL(`https://api.chatvolt.ai/agents/${id}/webhook`);
+  url.searchParams.append("type", type);
+  url.searchParams.append("enabled", String(enabled));
+
+  const response = await fetch(url.toString(), {
+    method: "PATCH",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+  }
+
+  return response.json();
+}
