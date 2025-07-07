@@ -1,3 +1,5 @@
+[![MCP Badge](https://lobehub.com/badge/mcp/miguelmartinezcv-chatvolt-mcp)](https://lobehub.com/mcp/miguelmartinezcv-chatvolt-mcp)
+
 # Chatvolt MCP Server
 
 A Model Context Protocol server that wraps the Chatvolt API, providing tools to manage agents, datastores, and CRM workflows.
