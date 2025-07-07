@@ -1,5 +1,6 @@
 import { getAgentTool, handleGetAgent } from "./getAgent.js";
 import { createAgentTool, handleCreateAgent } from "./createAgent.js";
+import { listAgentsTool, handleListAgents } from "./listAgents.js";
 import {
   listCrmScenariosTool,
   handleListCrmScenarios,
@@ -44,6 +45,7 @@ import {
 export const tools = [
   getAgentTool,
   createAgentTool,
+  listAgentsTool,
   listCrmScenariosTool,
   createCrmScenarioTool,
   updateCrmScenarioTool,
@@ -58,6 +60,7 @@ export const tools = [
 export const toolHandlers = {
   [getAgentTool.name]: handleGetAgent,
   [createAgentTool.name]: handleCreateAgent,
+  [listAgentsTool.name]: handleListAgents,
   [listCrmScenariosTool.name]: handleListCrmScenarios,
   [createCrmScenarioTool.name]: handleCreateCrmScenario,
   [updateCrmScenarioTool.name]: handleUpdateCrmScenario,
