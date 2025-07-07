@@ -36,6 +36,10 @@ import {
   enableDisableAgentIntegrationTool,
   handleEnableDisableAgentIntegration,
 } from "./enableDisableAgentIntegration.js";
+import {
+  updateAgentTool,
+  handleUpdateAgent,
+} from "./updateAgent.js";
 
 export const tools = [
   getAgentTool,
@@ -49,6 +53,7 @@ export const tools = [
   updateCrmStepTool,
   deleteCrmStepTool,
   enableDisableAgentIntegrationTool,
+  updateAgentTool,
 ];
 export const toolHandlers = {
   [getAgentTool.name]: handleGetAgent,
@@ -62,4 +67,5 @@ export const toolHandlers = {
   [updateCrmStepTool.name]: handleUpdateCrmStep,
   [deleteCrmStepTool.name]: handleDeleteCrmStep,
   [enableDisableAgentIntegrationTool.name]: handleEnableDisableAgentIntegration,
+  [updateAgentTool.name]: handleUpdateAgent,
 };

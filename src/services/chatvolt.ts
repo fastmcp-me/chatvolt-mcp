@@ -63,6 +63,40 @@ export async function createAgent(agentData: {
 
   return response.json();
 }
+export async function updateAgent(id: string, agentData: {
+  name?: string;
+  description?: string;
+  modelName?: string;
+  temperature?: number;
+  systemPrompt?: string;
+  visibility?: "public" | "private";
+  handle?: string;
+  interfaceConfig?: object;
+  configUrlExternal?: object;
+  configUrlInfosSystemExternal?: object;
+  tools?: any[];
+}) {
+  const apiKey = process.env.CHATVOLT_API_KEY;
+  if (!apiKey) {
+    throw new Error("CHATVOLT_API_KEY environment variable not set");
+  }
+
+  const response = await fetch(`https://api.chatvolt.ai/agents/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(agentData),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+  }
+
+  return response.json();
+}
 export async function listCrmScenarios(agentId?: string) {
   const apiKey = process.env.CHATVOLT_API_KEY;
   if (!apiKey) {
