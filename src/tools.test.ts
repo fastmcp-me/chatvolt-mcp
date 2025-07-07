@@ -7,9 +7,10 @@ import type * as ChatvoltService from "./services/chatvolt.js";
 jest.unstable_mockModule("./services/chatvolt.js", () => ({
   getAgentById: jest.fn(),
   createAgent: jest.fn(),
+  deleteAgent: jest.fn(),
 }));
 
-const { getAgentById, createAgent } = (await import(
+const { getAgentById, createAgent, deleteAgent } = (await import(
   "./services/chatvolt.js"
 )) as typeof ChatvoltService;
 
@@ -19,6 +20,9 @@ const { handleGetAgent: handleGetAgentFn } = await import(
 const { handleCreateAgent: handleCreateAgentFn } = await import(
   "./tools/createAgent.js"
 );
+const { handleDeleteAgent: handleDeleteAgentFn } = await import(
+  "./tools/deleteAgent.js"
+);
 
 const mockedGetAgentById = getAgentById as jest.MockedFunction<
   typeof getAgentById
@@ -26,11 +30,15 @@ const mockedGetAgentById = getAgentById as jest.MockedFunction<
 const mockedCreateAgent = createAgent as jest.MockedFunction<
   typeof createAgent
 >;
+const mockedDeleteAgent = deleteAgent as jest.MockedFunction<
+  typeof deleteAgent
+>;
 
 describe("Tool Handlers", () => {
   beforeEach(() => {
     mockedGetAgentById.mockReset();
     mockedCreateAgent.mockReset();
+    mockedDeleteAgent.mockReset();
   });
 
   describe("handleGetAgent", () => {
@@ -171,6 +179,40 @@ describe("Tool Handlers", () => {
       });
       expect(result.content[0].text).toEqual(
         JSON.stringify(expectedAgent, null, 2)
+      );
+    });
+  });
+
+  describe("handleDeleteAgent", () => {
+    it("should call deleteAgent with the correct parameters", async () => {
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "delete_agent",
+          arguments: { id: "123" },
+        },
+      };
+      mockedDeleteAgent.mockResolvedValue({
+        id: "123",
+        name: "Test Agent",
+      });
+
+      await handleDeleteAgentFn(request);
+
+      expect(mockedDeleteAgent).toHaveBeenCalledWith("123");
+    });
+
+    it("should throw an error if id is missing", async () => {
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "delete_agent",
+          arguments: {},
+        },
+      };
+
+      await expect(handleDeleteAgentFn(request)).rejects.toThrow(
+        "'id' is a required argument."
       );
     });
   });

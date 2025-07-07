@@ -97,6 +97,27 @@ export async function updateAgent(id: string, agentData: {
 
   return response.json();
 }
+export async function deleteAgent(id: string) {
+  const apiKey = process.env.CHATVOLT_API_KEY;
+  if (!apiKey) {
+    throw new Error("CHATVOLT_API_KEY environment variable not set");
+  }
+
+  const response = await fetch(`https://api.chatvolt.ai/agents/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+  }
+
+  return response.json();
+}
 export async function listAgents() {
   const apiKey = process.env.CHATVOLT_API_KEY;
   if (!apiKey) {
