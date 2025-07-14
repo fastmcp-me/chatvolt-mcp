@@ -3,7 +3,10 @@ import { listCrmScenarios } from "../services/chatvolt.js";
 
 export const listCrmScenariosTool: Tool = {
   name: "list_crm_scenarios",
-  description: "List CRM Scenarios",
+  description: `List CRM Scenarios
+
+Parameters:
+- \`agentId\` (string): Filter scenarios by a specific Agent ID.`,
   inputSchema: {
     type: "object",
     properties: {

@@ -3,7 +3,23 @@ import { updateCrmStep } from "../services/chatvolt.js";
 
 export const updateCrmStepTool: Tool = {
   name: "update_crm_step",
-  description: "Update a CRM Step",
+  description: `Update a CRM Step
+
+Parameters:
+- \`id\` (string, required): The ID of the CRM step to update.
+- \`name\` (string, required): The new name for the CRM step.
+- \`description\` (string): An optional new description for the CRM step.
+- \`agentId\` (string): Optional Agent ID to associate with this step.
+- \`trigger\` (string): A trigger condition or keyword for this step. Either this or 'prompt' is required.
+- \`prompt\` (string): The main prompt or instruction for this step. Either this or 'trigger' is required.
+- \`initialMessage\` (string): An initial message to be sent when this step is activated.
+- \`autoNextStepId\` (string): ID of the step to automatically transition to.
+- \`autoNextTime\` (integer): Time in seconds to wait before auto-transitioning.
+- \`defaultStatus\` (string): Default status for conversations at this step. (values: RESOLVED, UNRESOLVED, HUMAN_REQUESTED)
+- \`defaultPriority\` (string): Default priority for conversations at this step. (values: LOW, MEDIUM, HIGH)
+- \`assigneeLogicType\` (string): Logic for assigning conversations at this step. (values: none, clear, single_user, random_selected, fair_distribution_selected)
+- \`selectedMembershipIdsForAssignee\` (array): List of membership IDs for assignee logic. Required for single_user, random_selected, and fair_distribution_selected.
+- \`isRequired\` (boolean): Indicates if this step is mandatory.`,
   inputSchema: {
     type: "object",
     properties: {

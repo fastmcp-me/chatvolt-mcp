@@ -3,7 +3,15 @@ import { createDatastore } from "../services/chatvolt.js";
 
 export const createDatastoreTool: Tool = {
   name: "create_datastore",
-  description: "Create a new Chatvolt datastore",
+  description: `Create a new Chatvolt datastore
+
+Parameters:
+- \`name\` (string): Datastore name. If not provided, a fun name will be generated automatically.
+- \`description\` (string): Datastore description.
+- \`type\` (string, required): Datastore type (e.g., 'qdrant'). (values: qdrant)
+- \`isPublic\` (boolean): Defines whether the datastore is public (accessible without specific datastore authentication) or private.
+- \`pluginName\` (string): Short name for the OpenAI plugin associated with this datastore (optional, used if the datastore is exposed as a plugin). Maximum of 20 characters.
+- \`pluginDescriptionForHumans\` (string): Human-readable description for the OpenAI plugin (optional). Maximum of 90 characters.`,
   inputSchema: {
     type: "object",
     properties: {

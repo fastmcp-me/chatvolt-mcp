@@ -35,6 +35,9 @@ const { handleAgentQuery: handleAgentQueryFn } = await import(
 const { handleCreateDatasource: handleCreateDatasourceFn } = await import(
   "./tools/createDatasource.js"
 );
+const { handleGetDocumentation: handleGetDocumentationFn } = await import(
+  "./tools/getDocumentation.js"
+);
 
 const mockedGetAgentById = getAgentById as jest.MockedFunction<
   typeof getAgentById
@@ -316,6 +319,63 @@ describe("Tool Handlers", () => {
       };
       await expect(handleCreateDatasourceFn(request)).rejects.toThrow(
         "'datastoreId', 'name' and 'text' are required arguments."
+      );
+    });
+  });
+  describe("handleGetDocumentation", () => {
+    it("should return the content of TOOL_DESCRIPTIONS.md when docType is 'tools'", async () => {
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "get_documentation",
+          arguments: { docType: "tools" },
+        },
+      };
+
+      const result = await handleGetDocumentationFn(request);
+      expect(typeof result.content[0].text).toBe("string");
+      expect(result.content[0].text.length).toBeGreaterThan(0);
+    });
+
+    it("should return the content of MODELS.md when docType is 'models'", async () => {
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "get_documentation",
+          arguments: { docType: "models" },
+        },
+      };
+
+      const result = await handleGetDocumentationFn(request);
+      expect(typeof result.content[0].text).toBe("string");
+      expect(result.content[0].text.length).toBeGreaterThan(0);
+    });
+
+    it("should return the content of SYSTEM_PROMPTS.md when docType is 'prompts'", async () => {
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "get_documentation",
+          arguments: { docType: "prompts" },
+        },
+      };
+
+      const result = await handleGetDocumentationFn(request);
+      expect(typeof result.content[0].text).toBe("string");
+      expect(result.content[0].text.length).toBeGreaterThan(0);
+    });
+
+    it("should throw an error for an invalid docType", async () => {
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "get_documentation",
+          arguments: { docType: "invalid_type" },
+        },
+      };
+
+      await expect(handleGetDocumentationFn(request)).rejects.toThrow(
+        "Invalid docType: invalid_type"
       );
     });
   });

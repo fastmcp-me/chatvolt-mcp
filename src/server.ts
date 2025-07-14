@@ -1,9 +1,28 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import {
   CallToolRequestSchema,
+  GetPromptRequestSchema,
+  ListPromptsRequestSchema,
+  ListResourcesRequestSchema,
   ListToolsRequestSchema,
+  ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { toolHandlers, tools } from "./tools/index.js";
+import { readFile } from "fs/promises";
+import { join } from "path";
+
+const resources = [
+  {
+    uri: "file:///TOOL_DESCRIPTIONS.md",
+    name: "Tool Descriptions",
+    mimeType: "text/markdown",
+  },
+  {
+    uri: "file:///MODELS.md",
+    name: "Model Descriptions",
+    mimeType: "text/markdown",
+  },
+];
 
 /**
  * Create an MCP server with capabilities for tools.
@@ -16,6 +35,8 @@ export const server = new Server(
   {
     capabilities: {
       tools: {},
+      resources: {},
+      prompts: {},
     },
   }
 );
@@ -26,6 +47,51 @@ export const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools,
+  };
+});
+
+server.setRequestHandler(ListResourcesRequestSchema, async () => {
+  return {
+    resources,
+  };
+});
+
+server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+  const resource = resources.find((r) => r.uri === request.params.uri);
+  if (!resource) {
+    throw new Error("Unknown resource");
+  }
+  const filePath = join(process.cwd(), resource.uri.replace("file:///", ""));
+  const content = await readFile(filePath, "utf-8");
+  return {
+    content,
+  };
+});
+
+server.setRequestHandler(ListPromptsRequestSchema, async () => {
+  return {
+    prompts: [
+      {
+        name: "system-prompt",
+        description: "Provides the system prompts for the agent.",
+      },
+    ],
+  };
+});
+
+server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+  if (request.params.name !== "system-prompt") {
+    throw new Error("Unknown prompt");
+  }
+  const filePath = join(process.cwd(), "SYSTEM_PROMPTS.md");
+  const content = await readFile(filePath, "utf-8");
+  return {
+    messages: [
+      {
+        role: "user",
+        content,
+      },
+    ],
   };
 });
 

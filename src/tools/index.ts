@@ -47,6 +47,7 @@ import { listDatastoresTool, handleListDatastores } from "./listDatastores.js";
 import { getDatastoreTool, handleGetDatastore } from "./getDatastore.js";
 import { createDatasourceTool, handleCreateDatasource } from "./createDatasource.js";
 import { createDatastoreTool, handleCreateDatastore } from "./createDatastore.js";
+import { getDocumentationTool, handleGetDocumentation } from "./getDocumentation.js";
 
 export const tools = [
   getAgentTool,
@@ -68,6 +69,7 @@ export const tools = [
   getDatastoreTool,
   createDatasourceTool,
   createDatastoreTool,
+  getDocumentationTool,
 ];
 export const toolHandlers = {
   [getAgentTool.name]: handleGetAgent,
@@ -89,4 +91,5 @@ export const toolHandlers = {
   [getDatastoreTool.name]: handleGetDatastore,
   [createDatasourceTool.name]: handleCreateDatasource,
   [createDatastoreTool.name]: handleCreateDatastore,
+  [getDocumentationTool.name]: handleGetDocumentation,
 };

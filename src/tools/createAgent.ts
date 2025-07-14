@@ -3,7 +3,15 @@ import { createAgent } from "../services/chatvolt.js";
 
 export const createAgentTool: Tool = {
   name: "create_agent",
-  description: "Create a new Chatvolt agent",
+  description: `Create a new Chatvolt agent
+
+Parameters:
+- \`name\` (string, required): The name of the agent.
+- \`description\` (string, required): A description for the agent.
+- \`modelName\` (string, required): The model name for the agent (e.g., 'gpt_41'). (values: gpt_41_nano, gpt_41_mini, gpt_41, gpt_4o_mini, gpt_4o_mini_search...)
+- \`systemPrompt\` (string, required): The system prompt for the agent.
+- \`temperature\` (number): Model temperature (min 0.0, max 1.0). Controls randomness. Model default if not specified.
+- \`tools\` (array): Lista de ferramentas a serem associadas ao agente.`,
   inputSchema: {
     type: "object",
     properties: {
@@ -17,7 +25,7 @@ export const createAgentTool: Tool = {
       },
       modelName: {
         type: "string",
-        description: "The model name for the agent (e.g., 'gpt-4').",
+        description: "The model name for the agent (e.g., 'gpt_41').",
         enum: [
           "gpt_41_nano",
           "gpt_41_mini",

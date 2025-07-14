@@ -3,7 +3,12 @@ import { createDatasource } from "../services/chatvolt.js";
 
 export const createDatasourceTool: Tool = {
   name: "create_datasource",
-  description: "Create a new Chatvolt datasource",
+  description: `Create a new Chatvolt datasource
+
+Parameters:
+- \`datastoreId\` (string, required): The ID of the datastore to add the datasource to.
+- \`name\` (string, required): The name for the datasource, used as the filename.
+- \`text\` (string, required): The text content for the datasource.`,
   inputSchema: {
     type: "object",
     properties: {

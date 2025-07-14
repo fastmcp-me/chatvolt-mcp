@@ -3,7 +3,10 @@ import { deleteCrmStep } from "../services/chatvolt.js";
 
 export const deleteCrmStepTool: Tool = {
   name: "delete_crm_step",
-  description: "Delete a CRM Step",
+  description: `Delete a CRM Step
+
+Parameters:
+- \`id\` (string, required): The ID of the CRM step to delete.`,
   inputSchema: {
     type: "object",
     properties: {

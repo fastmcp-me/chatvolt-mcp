@@ -3,7 +3,21 @@ import { updateAgent } from "../services/chatvolt.js";
 
 export const updateAgentTool: Tool = {
   name: "update_agent",
-  description: "Partially updates an existing agent based on the ID. Allows updating one or more fields of a specific agent. Only the fields provided in the request body will be updated.",
+  description: `Partially updates an existing agent based on the ID. Allows updating one or more fields of a specific agent. Only the fields provided in the request body will be updated.
+
+Parameters:
+- \`id\` (string, required): ID of the agent to be updated.
+- \`name\` (string): New name for the agent.
+- \`description\` (string): New description for the agent.
+- \`modelName\` (string): New LLM model to be used by the agent. Check the API for available model names. (values: gpt_41_nano, gpt_41_mini, gpt_41, gpt_4o_mini, gpt_4o_mini_search...)
+- \`temperature\` (number): New model temperature (min 0.0, max 1.0).
+- \`systemPrompt\` (string): New system prompt for the agent.
+- \`visibility\` (string): New visibility for the agent. (values: public, private)
+- \`handle\` (string): New unique identifier (slug) for the agent.
+- \`interfaceConfig\` (object): New chat interface settings for this agent. Replaces the existing object.
+- \`configUrlExternal\` (object): New external URL configurations. Replaces the existing object.
+- \`configUrlInfosSystemExternal\` (object): New external URL configurations of the system. Replaces the existing object.
+- \`tools\` (array): List of tools for the agent. This array defines the final state of the tools.`,
   inputSchema: {
     type: "object",
     properties: {

@@ -3,7 +3,11 @@ import { createCrmScenario } from "../services/chatvolt.js";
 
 export const createCrmScenarioTool: Tool = {
   name: "create_crm_scenario",
-  description: "Create a new CRM Scenario",
+  description: `Create a new CRM Scenario
+
+Parameters:
+- \`name\` (string, required): The name for the new CRM scenario.
+- \`description\` (string): An optional description for the CRM scenario.`,
   inputSchema: {
     type: "object",
     properties: {

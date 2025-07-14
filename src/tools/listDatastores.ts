@@ -3,7 +3,7 @@ import { listDatastores } from "../services/chatvolt.js";
 
 export const listDatastoresTool: Tool = {
   name: "list_datastores",
-  description: "List all Chatvolt datastores",
+  description: `List all Chatvolt datastores`,
   inputSchema: {
     type: "object",
     properties: {},

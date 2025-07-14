@@ -3,7 +3,10 @@ import { listCrmSteps } from "../services/chatvolt.js";
 
 export const listCrmStepsTool: Tool = {
   name: "list_crm_steps",
-  description: "List CRM Steps for a given scenario",
+  description: `List CRM Steps for a given scenario
+
+Parameters:
+- \`scenarioId\` (string, required): The ID of the CRM scenario to list steps for.`,
   inputSchema: {
     type: "object",
     properties: {

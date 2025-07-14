@@ -3,7 +3,16 @@ import { getDatastoreById } from "../services/chatvolt.js";
 
 export const getDatastoreTool: Tool = {
   name: "get_datastore",
-  description: "Get a Chatvolt datastore by its ID",
+  description: `Get a Chatvolt datastore by its ID
+
+Parameters:
+- \`id\` (string, required): ID of the datastore to be retrieved.
+- \`search\` (string): Term to search for datasources by name (case-insensitive). Optional.
+- \`status\` (string): Filtra datasources pelo status. Opcional. (values: unsynched, pending, running, synched, error...)
+- \`type\` (string): Filtra datasources pelo tipo. Opcional. (values: file, web_page, web_site, qa)
+- \`offset\` (integer): Número de páginas a pular para paginação das datasources. Opcional.
+- \`limit\` (integer): Número máximo de datasources a serem retornadas por página. Opcional.
+- \`groupId\` (string): Filtra datasources por um ID de grupo específico. Opcional.`,
   inputSchema: {
     type: "object",
     properties: {

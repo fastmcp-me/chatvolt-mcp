@@ -3,7 +3,7 @@ import { listAgents } from "../services/chatvolt.js";
 
 export const listAgentsTool: Tool = {
   name: "list_agents",
-  description: "List all Chatvolt agents",
+  description: `List all Chatvolt agents`,
   inputSchema: {
     type: "object",
     properties: {},

@@ -3,7 +3,10 @@ import { deleteCrmScenario } from "../services/chatvolt.js";
 
 export const deleteCrmScenarioTool: Tool = {
   name: "delete_crm_scenario",
-  description: "Delete a CRM Scenario",
+  description: `Delete a CRM Scenario
+
+Parameters:
+- \`id\` (string, required): The ID of the CRM scenario to delete.`,
   inputSchema: {
     type: "object",
     properties: {

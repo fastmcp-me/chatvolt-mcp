@@ -3,7 +3,10 @@ import { deleteAgent } from "../services/chatvolt.js";
 
 export const deleteAgentTool: Tool = {
   name: "delete_agent",
-  description: "Permanently deletes a specific agent by its ID.",
+  description: `Permanently deletes a specific agent by its ID.
+
+Parameters:
+- \`id\` (string, required): ID of the agent to be deleted.`,
   inputSchema: {
     type: "object",
     properties: {

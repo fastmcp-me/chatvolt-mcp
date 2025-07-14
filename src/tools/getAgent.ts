@@ -3,7 +3,10 @@ import { getAgentById } from "../services/chatvolt.js";
 
 export const getAgentTool: Tool = {
   name: "get_agent",
-  description: "Get a Chatvolt agent by its ID or handle",
+  description: `Get a Chatvolt agent by its ID or handle
+
+Parameters:
+- \`id\` (string, required): Agent ID or its handle (unique identifier preceded by '@', e.g., '@my-agent')`,
   inputSchema: {
     type: "object",
     properties: {

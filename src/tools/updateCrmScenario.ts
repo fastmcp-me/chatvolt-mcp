@@ -3,7 +3,12 @@ import { updateCrmScenario } from "../services/chatvolt.js";
 
 export const updateCrmScenarioTool: Tool = {
   name: "update_crm_scenario",
-  description: "Update a CRM Scenario",
+  description: `Update a CRM Scenario
+
+Parameters:
+- \`id\` (string, required): The ID of the CRM scenario to update.
+- \`name\` (string, required): The new name for the CRM scenario.
+- \`description\` (string): An optional new description for the CRM scenario.`,
   inputSchema: {
     type: "object",
     properties: {
