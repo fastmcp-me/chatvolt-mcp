@@ -17,7 +17,7 @@ Parameters:
 - \`interfaceConfig\` (object): New chat interface settings for this agent. Replaces the existing object.
 - \`configUrlExternal\` (object): New external URL configurations. Replaces the existing object.
 - \`configUrlInfosSystemExternal\` (object): New external URL configurations of the system. Replaces the existing object.
-- \`tools\` (array): List of tools for the agent. This array defines the final state of the tools.`,
+`,
   inputSchema: {
     type: "object",
     properties: {
@@ -112,13 +112,6 @@ Parameters:
       configUrlInfosSystemExternal: {
         type: "object",
         description: "New external URL configurations of the system. Replaces the existing object.",
-      },
-      tools: {
-        type: "array",
-        items: {
-          type: "object",
-        },
-        description: "List of tools for the agent. This array defines the final state of the tools.",
       },
     },
     required: ["id"],

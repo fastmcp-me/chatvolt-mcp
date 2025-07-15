@@ -15,10 +15,19 @@ Creates a new Chatvolt agent.
 
 ## `update_agent`
 
-Updates an existing agent's properties.
+Partially updates an existing agent based on the ID. Allows updating one or more fields of a specific agent. Only the fields provided in the request body will be updated.
 
-*   **`id`** (string, required): The unique identifier of the agent to be updated.
-*   **Other optional parameters** (`name`, `description`, etc.): Any other agent property can be provided to update its value.
+*   **`id`** (string, required): ID of the agent to be updated.
+*   **`name`** (string): New name for the agent.
+*   **`description`** (string): New description for the agent.
+*   **`modelName`** (string): New LLM model to be used by the agent. Check the API for available model names. (values: gpt_41_nano, gpt_41_mini, gpt_41, gpt_4o_mini, gpt_4o_mini_search...)
+*   **`temperature`** (number): New model temperature (min 0.0, max 1.0).
+*   **`systemPrompt`** (string): New system prompt for the agent.
+*   **`visibility`** (string): New visibility for the agent. (values: public, private)
+*   **`handle`** (string): New unique identifier (slug) for the agent.
+*   **`interfaceConfig`** (object): New chat interface settings for this agent. Replaces the existing object.
+*   **`configUrlExternal`** (object): New external URL configurations. Replaces the existing object.
+*   **`configUrlInfosSystemExternal`** (object): New external URL configurations of the system. Replaces the existing object.
 
 ## `delete_agent`
 

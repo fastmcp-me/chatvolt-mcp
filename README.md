@@ -228,12 +228,21 @@ Creates a new Chatvolt agent.
 
 ## `update_agent`
 
-Updates an existing agent's properties.
+Partially updates an existing agent based on the ID. Allows updating one or more fields of a specific agent. Only the fields provided in the request body will be updated.
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
-| `id` | string, required | The unique identifier of the agent to be updated. |
-| Other optional parameters | | Any other agent property can be provided to update its value. |
+| `id` | string, required | ID of the agent to be updated. |
+| `name` | string, optional | New name for the agent. |
+| `description` | string, optional | New description for the agent. |
+| `modelName` | string, optional | New LLM model to be used by the agent. |
+| `temperature` | number, optional | New model temperature (min 0.0, max 1.0). |
+| `systemPrompt` | string, optional | New system prompt for the agent. |
+| `visibility` | string, optional | New visibility for the agent (e.g., 'public', 'private'). |
+| `handle` | string, optional | New unique identifier (slug) for the agent. |
+| `interfaceConfig` | object, optional | New chat interface settings for this agent. |
+| `configUrlExternal` | object, optional | New external URL configurations. |
+| `configUrlInfosSystemExternal` | object, optional | New external URL configurations of the system. |
 
 ---
 
