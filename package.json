@@ -1,8 +1,18 @@
 {
   "name": "chatvolt-mcp",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A Model Context Protocol server",
   "type": "module",
+  "license": "AGPL-3.0-only",
+  "author": {
+    "email": "miguel@chatvolt.ai",
+    "name": "Miguel J N Martinez",
+    "url": "https://www.chatvolt.ai/en-US"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiguelMartinezCV/chatvolt-mcp.git"
+  },
   "bin": {
     "chatvolt-mcp": "./build/index.js"
   },
