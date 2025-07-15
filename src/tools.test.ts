@@ -10,6 +10,7 @@ jest.unstable_mockModule("./services/chatvolt.js", () => ({
   deleteAgent: jest.fn(),
   agentQuery: jest.fn(),
   createDatasource: jest.fn(),
+  updateAgent: jest.fn(),
 }));
 
 const {
@@ -18,6 +19,7 @@ const {
   deleteAgent,
   agentQuery,
   createDatasource,
+  updateAgent,
 } = (await import("./services/chatvolt.js")) as typeof ChatvoltService;
 
 const { handleGetAgent: handleGetAgentFn } = await import(
@@ -38,6 +40,22 @@ const { handleCreateDatasource: handleCreateDatasourceFn } = await import(
 const { handleGetDocumentation: handleGetDocumentationFn } = await import(
   "./tools/getDocumentation.js"
 );
+const { handleAddHttpTool: handleAddHttpToolFn } = await import(
+  "./tools/addHttpTool.js"
+);
+const { handleAddDatastoreTool: handleAddDatastoreToolFn } = await import(
+  "./tools/addDatastoreTool.js"
+);
+const {
+  handleAddDelayedResponsesTool: handleAddDelayedResponsesToolFn,
+} = await import("./tools/addDelayedResponsesTool.js");
+const { handleAddRequestHumanTool: handleAddRequestHumanToolFn } = await import(
+  "./tools/addRequestHumanTool.js"
+);
+const { handleAddMarkAsResolvedTool: handleAddMarkAsResolvedToolFn } =
+  await import("./tools/addMarkAsResolvedTool.js");
+const { handleAddFollowUpMessagesTool: handleAddFollowUpMessagesToolFn } =
+  await import("./tools/addFollowUpMessagesTool.js");
 
 const mockedGetAgentById = getAgentById as jest.MockedFunction<
   typeof getAgentById
@@ -52,6 +70,9 @@ const mockedAgentQuery = agentQuery as jest.MockedFunction<typeof agentQuery>;
 const mockedCreateDatasource = createDatasource as jest.MockedFunction<
   typeof createDatasource
 >;
+const mockedUpdateAgent = updateAgent as jest.MockedFunction<
+  typeof updateAgent
+>;
 
 describe("Tool Handlers", () => {
   beforeEach(() => {
@@ -60,6 +81,7 @@ describe("Tool Handlers", () => {
     mockedDeleteAgent.mockReset();
     mockedAgentQuery.mockReset();
     mockedCreateDatasource.mockReset();
+    mockedUpdateAgent.mockReset();
   });
 
   describe("handleGetAgent", () => {
@@ -379,4 +401,228 @@ describe("Tool Handlers", () => {
       );
     });
   });
+
+  describe("addHttpTool", () => {
+    it("should add a new HTTP tool to an agent", async () => {
+      const mockAgentId = "agent-123";
+      const mockInitialAgent = { id: mockAgentId, name: "Test Agent", tools: [] };
+      const mockHttpConfig = {
+        name: "Test HTTP Tool",
+        description: "A test tool.",
+        url: "https://api.example.com/test",
+        method: "POST",
+      };
+
+      mockedGetAgentById.mockResolvedValue(mockInitialAgent);
+      mockedUpdateAgent.mockImplementation((id, payload) =>
+        Promise.resolve({ ...mockInitialAgent, ...payload })
+      );
+
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "add_http_tool",
+          arguments: {
+            agentId: mockAgentId,
+            config: mockHttpConfig,
+          },
+        },
+      };
+
+      await handleAddHttpToolFn(request);
+
+      expect(getAgentById).toHaveBeenCalledWith(mockAgentId);
+      expect(updateAgent).toHaveBeenCalledWith(mockAgentId, {
+        tools: [
+          {
+            type: "http",
+            ...mockHttpConfig,
+          },
+        ],
+      });
+    });
+  });
+
+  describe("addDatastoreTool", () => {
+    it("should add a new Datastore tool to an agent", async () => {
+      const mockAgentId = "agent-456";
+      const mockDatastoreId = "dstore-789";
+      const mockInitialAgent = {
+        id: mockAgentId,
+        name: "Datastore Test Agent",
+        tools: [],
+      };
+
+      mockedGetAgentById.mockResolvedValue(mockInitialAgent);
+      mockedUpdateAgent.mockImplementation((id, payload) =>
+        Promise.resolve({ ...mockInitialAgent, ...payload })
+      );
+
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "addDatastoreTool",
+          arguments: {
+            agentId: mockAgentId,
+            datastoreId: mockDatastoreId,
+          },
+        },
+      };
+
+      await handleAddDatastoreToolFn(request);
+
+      expect(updateAgent).toHaveBeenCalledWith(mockAgentId, {
+        tools: [
+          {
+            type: "datastore",
+            datastoreId: mockDatastoreId,
+          },
+        ],
+      });
+    });
+  });
+
+  describe("addDelayedResponsesTool", () => {
+    it("should add a new Delayed Responses tool to an agent", async () => {
+      const mockAgentId = "agent-delay";
+      const mockDelay = 30;
+      const mockInitialAgent = {
+        id: mockAgentId,
+        name: "Delayed Agent",
+        tools: [],
+      };
+
+      mockedGetAgentById.mockResolvedValue(mockInitialAgent);
+      mockedUpdateAgent.mockImplementation((id, payload) =>
+        Promise.resolve({ ...mockInitialAgent, ...payload })
+      );
+
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "add_delayed_responses_tool",
+          arguments: {
+            agentId: mockAgentId,
+            delay: mockDelay,
+          },
+        },
+      };
+
+      await handleAddDelayedResponsesToolFn(request);
+
+      expect(mockedUpdateAgent).toHaveBeenCalledWith(mockAgentId, {
+        tools: [
+          {
+            type: "delayed_responses",
+            config: {
+              delay: mockDelay,
+            },
+          },
+        ],
+      });
+    });
+  });
+
+  describe("addRequestHumanTool", () => {
+    it("should add a new Request Human tool to an agent", async () => {
+      const mockAgentId = "agent-human";
+      const mockInitialAgent = {
+        id: mockAgentId,
+        name: "Human Agent",
+        tools: [],
+      };
+
+      mockedGetAgentById.mockResolvedValue(mockInitialAgent);
+      mockedUpdateAgent.mockImplementation((id, payload) =>
+        Promise.resolve({ ...mockInitialAgent, ...payload })
+      );
+
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: "addRequestHumanTool",
+          arguments: {
+            agentId: mockAgentId,
+          },
+        },
+      };
+
+      await handleAddRequestHumanToolFn(request);
+
+      expect(mockedUpdateAgent).toHaveBeenCalledWith(mockAgentId, {
+        tools: [
+          {
+            type: "request_human",
+          },
+        ],
+      });
+    });
+  });
+    describe('addMarkAsResolvedTool', () => {
+      it('should add a new Mark As Resolved tool to an agent', async () => {
+        const mockAgentId = 'agent-resolved';
+        const mockInitialAgent = { id: mockAgentId, name: 'Resolved Agent', tools: [] };
+  
+        mockedGetAgentById.mockResolvedValue(mockInitialAgent);
+        mockedUpdateAgent.mockImplementation((id, payload) =>
+          Promise.resolve({ ...mockInitialAgent, ...payload })
+        );
+  
+        const request: CallToolRequest = {
+          method: 'tools/call',
+          params: {
+            name: 'addMarkAsResolvedTool',
+            arguments: {
+              agentId: mockAgentId,
+            },
+          },
+        };
+  
+        await handleAddMarkAsResolvedToolFn(request);
+  
+        expect(mockedUpdateAgent).toHaveBeenCalledWith(mockAgentId, {
+          tools: [
+            {
+              type: 'mark_as_resolved',
+            },
+          ],
+        });
+      });
+    });
 });
+  describe('addFollowUpMessagesTool', () => {
+    it('should add a new Follow Up Messages tool to an agent', async () => {
+      const mockAgentId = 'agent-followup';
+      const mockFollowUpConfig = {
+        messages: 'Is there anything else I can help with?',
+        max_sends: 2,
+        interval_hours: 1,
+      };
+      const mockInitialAgent = { id: mockAgentId, name: 'Follow Up Agent', tools: [] };
+
+      mockedGetAgentById.mockResolvedValue(mockInitialAgent);
+      mockedUpdateAgent.mockImplementation((id, payload) => Promise.resolve({ ...mockInitialAgent, ...payload }));
+
+      const request: CallToolRequest = {
+        method: "tools/call",
+        params: {
+          name: 'add_follow_up_messages_tool',
+          arguments: {
+            agentId: mockAgentId,
+            config: mockFollowUpConfig,
+          },
+        },
+      };
+
+      await handleAddFollowUpMessagesToolFn(request);
+
+      expect(updateAgent).toHaveBeenCalledWith(mockAgentId, {
+        tools: [
+          {
+            type: 'follow_up_messages',
+            config: mockFollowUpConfig,
+          },
+        ],
+      });
+    });
+  });
