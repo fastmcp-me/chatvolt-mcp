@@ -144,3 +144,106 @@ Creates a new data source within a datastore.
 *   **`datastoreId`** (string, required): The unique identifier of the datastore where the data source will be created.
 *   **`name`** (string, required): The name of the data source, often used as a filename.
 *   **`text`** (string, required): The actual text content of the data source.
+
+## Agent Tool Management
+
+### addHttpTool
+
+Adds a new, fully configured HTTP tool to an existing Chatvolt agent. This tool is designed to create complex HTTP integrations by defining endpoints, methods, headers, and dynamic parameters in a single operation.
+
+**Parâmetros Principais:**
+- **agentId** (`string`): O ID do agente que será modificado.
+- **config** (`object`): O objeto de configuração que define a requisição HTTP.
+
+**Estrutura do Objeto `config`:**
+- **url** (`string`): O URL do endpoint. Pode conter placeholders para variáveis, como `/users/{userId}`.
+- **method** (`string`): O método HTTP (`GET`, `POST`, `PUT`, etc.).
+- **name** (`string`): Um nome claro e descritivo para a ferramenta.
+- **description** (`string`): Uma descrição detalhada da função da ferramenta, para ser entendida pelo LLM.
+- **headers** (`Array<object>`, opcional): Usado para autenticação, tipo de conteúdo, etc.
+- **body** (`Array<object>`, opcional): Parâmetros do corpo da requisição (para `POST`, `PUT`).
+- **pathVariables** (`Array<object>`, opcional): Variáveis para substituir os placeholders no URL.
+- **queryParameters** (`Array<object>`, opcional): Parâmetros de consulta do URL.
+
+**Estrutura dos Objetos de Parâmetro (dentro de `headers`, `body`, etc.):**
+- **key** (`string`): O nome do parâmetro (ex: "Authorization").
+- **value** (`string`): Um valor padrão ou fixo.
+- **description** (`string`): A descrição do propósito do parâmetro.
+- **acceptedValues** (`Array<string>`): Valores específicos permitidos. Deixe vazio (`[]`) se qualquer valor for aceito.
+- **isUserProvided** (`boolean`): Se `true`, o LLM pedirá o valor ao usuário. Se `false`, o `value` é usado como um valor fixo.
+
+---
+
+**Exemplo de Uso Complexo:**
+
+O exemplo a seguir cria uma ferramenta para buscar os detalhes de um pedido específico de um cliente em uma API de e-commerce.
+
+```json
+{
+  "agentId": "cmcck6suz0mirbho6ciujkywv",
+  "config": {
+    "name": "Get User Order Details",
+    "description": "Fetches specific order details for a given user from the e-commerce API.",
+    "url": "https://api.yourecommerce.com/v1/users/{userId}/orders/{orderId}",
+    "method": "GET",
+    "headers": [
+      {
+        "key": "Authorization",
+        "value": "Bearer YOUR_STATIC_API_KEY",
+        "description": "API authentication token.",
+        "acceptedValues": [],
+        "isUserProvided": false
+      }
+    ],
+    "pathVariables": [
+      {
+        "key": "userId",
+        "value": "",
+        "description": "The unique ID of the user.",
+        "acceptedValues": [],
+        "isUserProvided": true
+      },
+      {
+        "key": "orderId",
+        "value": "",
+        "description": "The ID of the order to retrieve.",
+        "acceptedValues": [],
+        "isUserProvided": true
+      }
+    ],
+    "queryParameters": [
+      {
+        "key": "include_details",
+        "value": "true",
+        "description": "Set to 'true' to include full item details in the response.",
+        "acceptedValues": ["true", "false"],
+        "isUserProvided": true
+      }
+    ],
+    "body": []
+  }
+}
+```
+
+### addDatastoreTool
+Adds a new Datastore tool to an existing agent.
+- **agentId**: The ID of the agent to modify.
+- **datastoreId**: The ID of the Datastore to link.
+
+### addDelayedResponsesTool
+Adds a new Delayed Responses tool to an existing agent.
+- **agentId**: The ID of the agent to add the tool to.
+- **delay**: The delay time in seconds.
+
+### addRequestHumanTool
+Adds a new Request Human tool to an existing agent.
+- **agentId**: The ID of the agent to add the tool to.
+
+### addMarkAsResolvedTool
+Adds a new Mark As Resolved tool to an existing agent.
+- **agentId**: The ID of the agent to add the tool to.
+
+### addFollowUpMessagesTool
+Adds a new Follow Up Messages tool to an existing agent.
+- **agentId**: The ID of the agent to add the tool to.
+- **config**: The configuration for the follow-up messages tool (`messages`, `max_sends`, `interval_hours`).

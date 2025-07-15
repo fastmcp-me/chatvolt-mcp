@@ -1,0 +1,121 @@
+import { CallToolRequest, Tool } from "@modelcontextprotocol/sdk/types.js";
+import { getAgentById, updateAgent } from "../services/chatvolt.js";
+
+export const addHttpTool: Tool = {
+  name: "add_http_tool",
+  description: `
+Adds a new, fully configured HTTP tool to an existing Chatvolt agent.
+This tool streamlines the creation of complex HTTP integrations by allowing the definition of endpoints, methods, headers, and dynamic parameters. It fetches the agent's existing tool configuration, appends the new HTTP tool, and updates the agent in a single, atomic operation.
+  `.trim(),
+  inputSchema: {
+    type: "object",
+    properties: {
+      agentId: {
+        type: "string",
+        description: "The unique identifier of the agent to be updated.",
+      },
+      config: {
+        type: "object",
+        description: `
+The detailed configuration object for the HTTP tool.
+Each parameter array (headers, body, pathVariables, queryParameters) consists of objects with the following structure:
+- key: The name of the parameter (e.g., "Authorization", "userId").
+- value: A default or fixed value. For user-provided parameters, this can be empty.
+- description: A clear explanation of the parameter's purpose.
+- acceptedValues: An array of specific allowed values. Empty if any value is accepted.
+- isUserProvided: A boolean. If true, the LLM will request this value from the user during conversation. If false, the value is used as a fixed secret or constant.
+        `.trim(),
+        properties: {
+          url: {
+            type: "string",
+            description:
+              "The endpoint URL, which can include placeholders for path variables (e.g., 'https://api.example.com/users/{userId}').",
+          },
+          method: {
+            type: "string",
+            description: "The HTTP method (e.g., 'GET', 'POST', 'PUT').",
+          },
+          name: {
+            type: "string",
+            description: "A descriptive, human-readable name for the tool.",
+          },
+          description: {
+            type: "string",
+            description:
+              "A detailed description of the tool's functionality, intended to be understood by the LLM.",
+          },
+          headers: {
+            type: "array",
+            items: { type: "object" },
+            description:
+              "Optional array of request headers. Used for authentication, content type specification, etc.",
+          },
+          body: {
+            type: "array",
+            items: { type: "object" },
+            description:
+              "Optional array of parameters for the request body, typically for 'POST' or 'PUT' requests.",
+          },
+          pathVariables: {
+            type: "array",
+            items: { type: "object" },
+            description:
+              "Optional array of variables to be substituted into the URL path.",
+          },
+          queryParameters: {
+            type: "array",
+            items: { type: "object" },
+            description: "Optional array of URL query parameters.",
+          },
+        },
+        required: ["url", "method", "name", "description"],
+      },
+    },
+    required: ["agentId", "config"],
+  },
+};
+
+export async function handleAddHttpTool(request: CallToolRequest) {
+  if (request.params.name !== "add_http_tool") {
+    throw new Error("Unknown tool");
+  }
+
+  const { agentId, config } = request.params.arguments ?? {};
+
+  if (!agentId) {
+    throw new Error("'agentId' is a required argument.");
+  }
+
+  if (!config) {
+    throw new Error("'config' is a required argument.");
+  }
+
+  // 1. Fetch the agent
+  const agent = await getAgentById(String(agentId));
+
+  // 2. Get existing tools
+  const existingTools = agent.tools || [];
+
+  // 3. Create the new tool
+  const newTool = {
+    type: "http",
+    ...config,
+  };
+
+  // 4. Create the updated tools list
+  const updatedTools = [...existingTools, newTool];
+
+  // 5. Update the agent
+  const updatedAgent = await updateAgent(String(agentId), {
+    tools: updatedTools,
+  });
+
+  return {
+    content: [
+      {
+        type: "text",
+        text: JSON.stringify(updatedAgent, null, 2),
+      },
+    ],
+  };
+}

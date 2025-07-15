@@ -48,8 +48,20 @@ import { getDatastoreTool, handleGetDatastore } from "./getDatastore.js";
 import { createDatasourceTool, handleCreateDatasource } from "./createDatasource.js";
 import { createDatastoreTool, handleCreateDatastore } from "./createDatastore.js";
 import { getDocumentationTool, handleGetDocumentation } from "./getDocumentation.js";
+import { addHttpTool, handleAddHttpTool } from "./addHttpTool.js";
+import { addDatastoreTool, handleAddDatastoreTool } from "./addDatastoreTool.js";
+import { addDelayedResponsesTool, handleAddDelayedResponsesTool } from "./addDelayedResponsesTool.js";
+import { addRequestHumanTool, handleAddRequestHumanTool } from "./addRequestHumanTool.js";
+import { addMarkAsResolvedTool, handleAddMarkAsResolvedTool } from "./addMarkAsResolvedTool.js";
+import { addFollowUpMessagesTool, handleAddFollowUpMessagesTool } from "./addFollowUpMessagesTool.js";
 
 export const tools = [
+  addFollowUpMessagesTool,
+  addMarkAsResolvedTool,
+  addRequestHumanTool,
+  addDelayedResponsesTool,
+  addDatastoreTool,
+  addHttpTool,
   getAgentTool,
   createAgentTool,
   listAgentsTool,
@@ -92,4 +104,10 @@ export const toolHandlers = {
   [createDatasourceTool.name]: handleCreateDatasource,
   [createDatastoreTool.name]: handleCreateDatastore,
   [getDocumentationTool.name]: handleGetDocumentation,
+  [addHttpTool.name]: handleAddHttpTool,
+  [addDatastoreTool.name]: handleAddDatastoreTool,
+  [addDelayedResponsesTool.name]: handleAddDelayedResponsesTool,
+  [addRequestHumanTool.name]: handleAddRequestHumanTool,
+  [addMarkAsResolvedTool.name]: handleAddMarkAsResolvedTool,
+  [addFollowUpMessagesTool.name]: handleAddFollowUpMessagesTool,
 };
