@@ -41,6 +41,7 @@ export async function handleGetDocumentation(request: CallToolRequest) {
 
   try {
     const filePath = path.join(process.cwd(), fileName);
+    console.log(`Attempting to read file from: ${filePath}`);
     const content = await fs.readFile(filePath, 'utf-8');
     return {
         content: [
