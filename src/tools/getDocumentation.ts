@@ -6,6 +6,8 @@ const DOC_FILES = {
   tools: 'TOOL_DESCRIPTIONS.md',
   models: 'MODELS.md',
   prompts: 'SYSTEM_PROMPTS.md',
+  chatvolt_http_tools: 'CHATVOLT_HTTP_TOOLS.md',
+  cal_com_http_tools: 'CAL_COM_HTTP_TOOLS.md',
 };
 
 export const getDocumentationTool: Tool = {
@@ -13,13 +15,13 @@ export const getDocumentationTool: Tool = {
   description: `Retrieves the content of a specified documentation file.
 
 Parameters:
-- \`docType\` (string, required): The type of documentation to retrieve. (values: tools, models, prompts)`,
+- \`docType\` (string, required): The type of documentation to retrieve. (values: tools, models, prompts, chatvolt_http_tools, cal_com_http_tools)`,
   inputSchema: {
     type: "object",
     properties: {
       docType: {
         type: "string",
-        enum: ["tools", "models", "prompts"],
+        enum: ["tools", "models", "prompts", "chatvolt_http_tools", "cal_com_http_tools"],
         description: "The type of documentation to retrieve."
       },
     },
@@ -30,7 +32,7 @@ Parameters:
 export async function handleGetDocumentation(request: CallToolRequest) {
   const { docType } = request.params.arguments || {};
 
-  if (!docType || typeof docType !== 'string' || !['tools', 'models', 'prompts'].includes(docType)) {
+  if (!docType || typeof docType !== 'string' || !Object.keys(DOC_FILES).includes(docType)) {
     throw new Error(`Invalid docType: ${docType}`);
   }
 

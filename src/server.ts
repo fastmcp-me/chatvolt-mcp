@@ -22,6 +22,16 @@ const resources = [
     name: "Model Descriptions",
     mimeType: "text/markdown",
   },
+  {
+    uri: "file:///CHATVOLT_HTTP_TOOLS.md",
+    name: "Chatvolt HTTP Tool Templates",
+    mimeType: "text/markdown",
+  },
+  {
+    uri: "file:///CAL_COM_HTTP_TOOLS.md",
+    name: "Cal.com HTTP Tool Templates",
+    mimeType: "text/markdown",
+  },
 ];
 
 /**
