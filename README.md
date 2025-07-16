@@ -37,58 +37,29 @@ The server provides additional context to the AI model through resources and pro
 
 ---
 
-# Setup and Installation
+# Client Configuration
 
-This guide will walk you through the process of setting up and running the project on your local machine.
+This MCP server is launched via a command from the client. To connect, you need to configure your client to launch the `chatvolt-mcp` command and pass the necessary environment variables.
 
-## Prerequisites
+Here is an example of how you might configure your client's `mcpServers` setting:
 
-Before you begin, ensure you have the following installed:
-
-*   [Node.js](https://nodejs.org/) (which includes npm)
-
-## Installation
-
-1.  **Clone the repository:**
-
-    ```bash
-    git clone https://github.com/MiguelMartinezCV/chatvolt-mcp.git
-    cd chatvolt-mcp
-    ```
-
-2.  **Install dependencies:**
-
-    Run the following command to install the project's dependencies as defined in the [`package.json`](package.json:29) file. This will also automatically trigger the build process.
-
-    ```bash
-    npm install
-    ```
-
-## Building the Project
-
-If you need to manually build the project (compile the TypeScript source code into JavaScript), you can run the following command. The `npm install` command already takes care of this for you.
-
-```bash
-npm run build
+```json
+{
+  "mcpServers": {
+    "chatvolt-mcp": {
+      "command": "npx",
+      "args": [
+        "chatvolt-mcp"
+      ],
+      "env": {
+        "CHATVOLT_API_KEY": "{your_token}"
+      }
+    }
+  }
+}
 ```
 
-This command uses `tsc` to compile the files from `src` into the `build` directory.
-
-## Running the Server
-
-To run the server for development, you can use the watch script to automatically recompile on file changes:
-
-```bash
-npm run watch
-```
-
-In a separate terminal, to start and inspect the server, run:
-
-```bash
-npx @modelcontextprotocol/inspector build/index.js
-```
-
-This will start the Model Context Protocol server, and you can connect to it using an MCP inspector client.
+**Note:** You must replace `"{your_token}"` with your actual Chatvolt API key.
 
 ---
 
