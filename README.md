@@ -1,3 +1,10 @@
+[![Add to Cursor](https://fastmcp.me/badges/cursor_dark.svg)](https://fastmcp.me/MCP/Details/723/chatvolt)
+[![Add to VS Code](https://fastmcp.me/badges/vscode_dark.svg)](https://fastmcp.me/MCP/Details/723/chatvolt)
+[![Add to Claude](https://fastmcp.me/badges/claude_dark.svg)](https://fastmcp.me/MCP/Details/723/chatvolt)
+[![Add to ChatGPT](https://fastmcp.me/badges/chatgpt_dark.svg)](https://fastmcp.me/MCP/Details/723/chatvolt)
+[![Add to Codex](https://fastmcp.me/badges/codex_dark.svg)](https://fastmcp.me/MCP/Details/723/chatvolt)
+[![Add to Gemini](https://fastmcp.me/badges/gemini_dark.svg)](https://fastmcp.me/MCP/Details/723/chatvolt)
+
 # Chatvolt MCP Server: High-Level Overview
 
 This document provides a high-level overview of the Chatvolt Model Context Protocol (MCP) server, a TypeScript-based application designed to extend the capabilities of AI agents by providing them with a suite of tools to interact with the Chatvolt platform.
